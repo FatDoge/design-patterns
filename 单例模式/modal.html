@@ -4,19 +4,6 @@
     <meta charset="UTF-8">
     <title>单例模式弹框</title>
 </head>
-<style>
-    #modal {
-        height: 200px;
-        width: 200px;
-        line-height: 200px;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        border: 1px solid black;
-        text-align: center;
-    }
-</style>
 <body>
 	<button id='open'>打开弹框</button>
 	<button id='close'>关闭弹框</button>
@@ -24,17 +11,31 @@
 <script>
   // ES6版本的全局Modal
   class Modal {
-    constructor() {
+    constructor(options = {}) {
       if(!Modal.instance) {
-        Modal.instance = this.renderModal()
+        Modal.instance = this.renderModal(options)
       }
       return Modal.instance
     }
 
-    renderModal() {
+    renderModal({
+      // 可扩展多种功能
+      text = '默认modal内容'
+    }) {
       const modal = document.createElement('div')
-      modal.innerHTML = '我是一个全局唯一的Modal'
+      modal.innerHTML = text
       modal.id = 'modal'
+      modal.setAttribute('style',`
+      height: 200px;
+        width: 300px;
+        line-height: 200px;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      `)
       modal.style.display = 'none'
       document.body.appendChild(modal)
       return modal
@@ -58,7 +59,9 @@
     // 点击打开按钮展示模态框
     document.getElementById('open').addEventListener('click', function() {
         // 未点击则不创建modal实例，避免不必要的内存占用;此处不用 new Modal 的形式调用也可以，和 Storage 同理
-    	const modal = new Modal()
+    	const modal = new Modal({
+        text: '大狗的modal内容'
+      })
     	modal.style.display = 'block'
     })
     
